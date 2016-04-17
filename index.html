@@ -36,9 +36,9 @@
 
         var soiltemp_voltage_data = new google.visualization.DataTable();
         soiltemp_voltage_data.addColumn('datetime', 'timestamp');
-        soiltemp_voltage_data.addColumn('number', 'soiltempf');
-        soiltemp_voltage_data.addColumn('number', 'tempf');
-        soiltemp_voltage_data.addColumn('number', 'solarvoltage');
+        soiltemp_voltage_data.addColumn('number', 'soil temperature (F)');
+        soiltemp_voltage_data.addColumn('number', 'air temperature (F)');
+        soiltemp_voltage_data.addColumn('number', 'solar power (V)');
         $.each(all_data, function (i, row) {
           soiltemp_voltage_data.addRow([
             (new Date(row.timestamp)),
@@ -68,9 +68,9 @@
 
         var rain_soilmoisture = new google.visualization.DataTable();
         rain_soilmoisture.addColumn('datetime', 'timestamp');
-        rain_soilmoisture.addColumn('number', 'soilmoisture0');
-        rain_soilmoisture.addColumn('number', 'soilmoisture1');
-        rain_soilmoisture.addColumn('number', 'rainin');
+        rain_soilmoisture.addColumn('number', 'soil moisture 1');
+        rain_soilmoisture.addColumn('number', 'soil moisture 2');
+        rain_soilmoisture.addColumn('number', 'rain (inches)');
         $.each(all_data, function (i, row) {
           rain_soilmoisture.addRow([
             (new Date(row.timestamp)),
@@ -91,7 +91,7 @@
           },
           vAxes: {
             0: {title: "moisture", viewWindow:{max:4096, min:2000}},
-            1: {title: "inches", viewWindow:{max:5, min:0}}
+            1: {title: "inches", viewWindow:{max:2, min:0}}
           }
         });
 
@@ -99,8 +99,8 @@
 
         var winds = new google.visualization.DataTable();
         winds.addColumn('datetime', 'timestamp');
-        winds.addColumn('number', 'windspeed_avg');
-        winds.addColumn('number', 'windgust_avg');
+        winds.addColumn('number', 'wind speed 1m average');
+        winds.addColumn('number', 'wind gust 10m average');
         $.each(all_data, function (i, row) {
           winds.addRow([
             (new Date(row.timestamp)),
@@ -128,8 +128,8 @@
 
         var humidity_and_hg = new google.visualization.DataTable();
         humidity_and_hg.addColumn('datetime', 'timestamp');
-        humidity_and_hg.addColumn('number', 'humidity');
-        humidity_and_hg.addColumn('number', 'hg');
+        humidity_and_hg.addColumn('number', 'air humidity');
+        humidity_and_hg.addColumn('number', 'barometer (hg)');
         $.each(all_data, function (i, row) {
           humidity_and_hg.addRow([
             (new Date(row.timestamp)),
