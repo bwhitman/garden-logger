@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Bread Detector</title>
+    <title>Garden</title>
     <link rel="apple-touch-icon" href="bread.png">
-    <meta http-equiv="refresh" content="20">
+    <!-- <meta http-equiv="refresh" content="20"> -->
     <!-- EXTERNAL LIBS-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://www.google.com/jsapi"></script>
@@ -11,52 +11,124 @@
     <!-- EXAMPLE SCRIPT -->
     <script>
 
+      function getData(maxPages) {
+        all_data = [];
+        var public_key = 'OG6Wn5ANN5HMXryVqjRm';
+        for(var page =1; page < maxPages; page++ ) {
+          var jsonData = JSON.parse($.ajax({
+            url: 'https://data.sparkfun.com/output/' + public_key + '.json',
+            data: {page: page},
+            dataType: 'json',
+            async: false,
+          }).responseText);
+
+          $.each(jsonData, function (i, row) {
+              all_data.push(row);
+          });
+        }
+        return all_data;
+      }
+
+
       // onload callback
-      function drawChart() {
+      function drawCharts() {
+        all_data = getData(10);
 
-        var public_key = 'bGjMlzNxlwF0nJzKZAaJ';
-
-        // JSONP request
-        var jsonData = $.ajax({
-          url: 'https://data.sparkfun.com/output/' + public_key + '.json',
-          dataType: 'jsonp',
-        }).done(function (results) {
-
-          var mixed_data = new google.visualization.DataTable();
-
-          mixed_data.addColumn('datetime', 'timestamp');
-          mixed_data.addColumn('number', 'celsius');
-          mixed_data.addColumn('number', 'inches');
-          $.each(results, function (i, row) {
-            var seventeen_hours_ago = new Date().getTime() - (1 * 17 * 60 * 60 * 1000);
-            var date_of_observation = new Date(row.timestamp);
-            if (date_of_observation > seventeen_hours_ago) {
-              mixed_data.addRow([
-                (new Date(row.timestamp)),
-                parseFloat(row.temp),
-                parseFloat(0-row.distance)
-              ]);
-            }
-          });
-
-
-
-          var mixed_chart = new google.visualization.LineChart($('#mixed_chart').get(0));
-
-          mixed_chart.draw(mixed_data, {
-            title: 'Bread Detector',
-            series: {
-              0: {targetAxisIndex: 0},
-              1: {targetAxisIndex: 1}
-            },
-            vAxes: {
-              0: {title: "temp", viewWindow:{max:35, min:20}},
-              1: {title: "distance", viewWindow:{max:0, min:-6}}
-            }
-          });
-
-
+        var soiltemp_voltage_data = new google.visualization.DataTable();
+        soiltemp_voltage_data.addColumn('datetime', 'timestamp');
+        soiltemp_voltage_data.addColumn('number', 'soiltempf');
+        soiltemp_voltage_data.addColumn('number', 'tempf');
+        soiltemp_voltage_data.addColumn('number', 'solarvoltage');
+        $.each(all_data, function (i, row) {
+          soiltemp_voltage_data.addRow([
+            (new Date(row.timestamp)),
+            parseFloat(row.soiltempf),
+            parseFloat(row.tempf),
+            parseFloat(row.solarvoltage)
+            ]);
         });
+
+        var soiltemp_voltage_chart = new google.visualization.LineChart($('#soiltemp_voltage_chart').get(0));
+
+        soiltemp_voltage_chart.draw(soiltemp_voltage_data, {
+          title: 'Garden',
+          series: {
+            0: {targetAxisIndex: 0},
+            1: {targetAxisIndex: 0},
+            2: {targetAxisIndex: 1}
+          },
+          vAxes: {
+            0: {title: "temp (f)", viewWindow:{max:20, min:100}},
+            1: {title: "solarvoltage", viewWindow:{max:0, min:3000}}
+          }
+        });
+
+
+
+
+        var rain_soilmoisture = new google.visualization.DataTable();
+        rain_soilmoisture.addColumn('datetime', 'timestamp');
+        rain_soilmoisture.addColumn('number', 'soilmoisture0');
+        rain_soilmoisture.addColumn('number', 'soilmoisture1');
+        rain_soilmoisture.addColumn('number', 'rainin');
+        $.each(all_data, function (i, row) {
+          rain_soilmoisture.addRow([
+            (new Date(row.timestamp)),
+            parseFloat(row.soilmoisture0),
+            parseFloat(row.soilmoisture1),
+            parseFloat(row.rainin)
+            ]);
+        });
+
+        var rain_soilmoisture_chart = new google.visualization.LineChart($('#soilmoisture_chart').get(0));
+
+        rain_soilmoisture_chart.draw(rain_soilmoisture, {
+          title: 'Garden',
+          series: {
+            0: {targetAxisIndex: 0},
+            1: {targetAxisIndex: 0},
+            2: {targetAxisIndex: 1}
+          },
+          vAxes: {
+            0: {title: "moisture", viewWindow:{max:4096, min:2000}},
+            1: {title: "inches", viewWindow:{max:5, min:0}}
+          }
+        });
+
+
+
+        var winds_and_humidity = new google.visualization.DataTable();
+        winds_and_humidity.addColumn('datetime', 'timestamp');
+        winds_and_humidity.addColumn('number', 'windspeedmph');
+        winds_and_humidity.addColumn('number', 'windspeed_avg');
+        winds_and_humidity.addColumn('number', 'windgust_avg');
+        winds_and_humidity.addColumn('number', 'humidity');
+        $.each(all_data, function (i, row) {
+          winds_and_humidity.addRow([
+            (new Date(row.timestamp)),
+            parseFloat(row.windspeedmph),
+            parseFloat(row.windspeed_avg),
+            parseFloat(row.windgust_avg),
+            parseFloat(row.humidity)
+            ]);
+        });
+
+        var winds_and_humidity_chart = new google.visualization.LineChart($('#winds_and_humidity_chart').get(0));
+
+        winds_and_humidity_chart.draw(winds_and_humidity, {
+          title: 'Garden',
+          series: {
+            0: {targetAxisIndex: 0},
+            1: {targetAxisIndex: 0},
+            2: {targetAxisIndex: 0},
+            3: {targetAxisIndex: 1}
+          },
+          vAxes: {
+            0: {title: "mph", viewWindow:{max:30, min:0}},
+            1: {title: "percent", viewWindow:{max:100, min:0}}
+          }
+        });
+
 
       }
 
@@ -66,12 +138,15 @@
       });
 
       // call drawChart once google charts is loaded
-      google.setOnLoadCallback(drawChart);
+      google.setOnLoadCallback(drawCharts);
 
     </script>
 
   </head>
   <body>
-    <div id="mixed_chart" style="width: 100%; height: 500px;"></div>
+    <div id="soiltemp_voltage_chart" style="width: 100%; height: 500px;"></div>
+    <div id="soilmoisture_chart" style="width: 100%; height: 500px;"></div>
+    <div id="winds_and_humidity_chart" style="width: 100%; height: 500px;"></div>
+
   </body>
 </html>
