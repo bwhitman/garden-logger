@@ -51,7 +51,7 @@
         var soiltemp_voltage_chart = new google.visualization.LineChart($('#soiltemp_voltage_chart').get(0));
 
         soiltemp_voltage_chart.draw(soiltemp_voltage_data, {
-          title: 'Garden',
+          title: 'Sun and temperature',
           series: {
             0: {targetAxisIndex: 0},
             1: {targetAxisIndex: 0},
@@ -83,7 +83,7 @@
         var rain_soilmoisture_chart = new google.visualization.LineChart($('#soilmoisture_chart').get(0));
 
         rain_soilmoisture_chart.draw(rain_soilmoisture, {
-          title: 'Garden',
+          title: 'Rain and soil moisture',
           series: {
             0: {targetAxisIndex: 0},
             1: {targetAxisIndex: 0},
@@ -97,35 +97,58 @@
 
 
 
-        var winds_and_humidity = new google.visualization.DataTable();
-        winds_and_humidity.addColumn('datetime', 'timestamp');
-        winds_and_humidity.addColumn('number', 'windspeedmph');
-        winds_and_humidity.addColumn('number', 'windspeed_avg');
-        winds_and_humidity.addColumn('number', 'windgust_avg');
-        winds_and_humidity.addColumn('number', 'humidity');
+        var winds = new google.visualization.DataTable();
+        winds.addColumn('datetime', 'timestamp');
+        winds.addColumn('number', 'windspeed_avg');
+        winds.addColumn('number', 'windgust_avg');
         $.each(all_data, function (i, row) {
-          winds_and_humidity.addRow([
+          winds.addRow([
             (new Date(row.timestamp)),
-            parseFloat(row.windspeedmph),
             parseFloat(row.windspeed_avg),
             parseFloat(row.windgust_avg),
-            parseFloat(row.humidity)
             ]);
         });
 
-        var winds_and_humidity_chart = new google.visualization.LineChart($('#winds_and_humidity_chart').get(0));
+        var winds_chart = new google.visualization.LineChart($('#winds_chart').get(0));
 
-        winds_and_humidity_chart.draw(winds_and_humidity, {
-          title: 'Garden',
+        winds_chart.draw(winds, {
+          title: 'Winds',
           series: {
             0: {targetAxisIndex: 0},
-            1: {targetAxisIndex: 0},
-            2: {targetAxisIndex: 0},
-            3: {targetAxisIndex: 1}
+            1: {targetAxisIndex: 1},
           },
           vAxes: {
-            0: {title: "mph", viewWindow:{max:30, min:0}},
-            1: {title: "percent", viewWindow:{max:100, min:0}}
+            0: {title: "mph", viewWindow:{max:15, min:0}},
+            1: {title: "gust mph", viewWindow:{max:50, min:0}},
+
+          }
+
+        });
+
+
+        var humidity_and_hg = new google.visualization.DataTable();
+        humidity_and_hg.addColumn('datetime', 'timestamp');
+        humidity_and_hg.addColumn('number', 'humidity');
+        humidity_and_hg.addColumn('number', 'hg');
+        $.each(all_data, function (i, row) {
+          humidity_and_hg.addRow([
+            (new Date(row.timestamp)),
+            parseFloat(row.humidity),
+            parseFloat(row.hg),
+            ]);
+        });
+
+        var humidity_and_hg_chart = new google.visualization.LineChart($('#humidity_and_hg_chart').get(0));
+
+        humidity_and_hg_chart.draw(humidity_and_hg, {
+          title: 'Humidity and pressure',
+          series: {
+            0: {targetAxisIndex: 0},
+            1: {targetAxisIndex: 1},
+          },
+          vAxes: {
+            0: {title: "percent", viewWindow:{max:100, min:0}},
+            1: {title: "hg", viewWindow:{max:31, min:29}},
           }
         });
 
@@ -146,7 +169,8 @@
   <body>
     <div id="soiltemp_voltage_chart" style="width: 100%; height: 500px;"></div>
     <div id="soilmoisture_chart" style="width: 100%; height: 500px;"></div>
-    <div id="winds_and_humidity_chart" style="width: 100%; height: 500px;"></div>
+    <div id="winds_chart" style="width: 100%; height: 500px;"></div>
+    <div id="humidity_and_hg_chart" style="width: 100%; height: 500px;"></div>
 
   </body>
 </html>
