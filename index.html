@@ -38,13 +38,13 @@
         soiltemp_voltage_data.addColumn('datetime', 'timestamp');
         soiltemp_voltage_data.addColumn('number', 'soil temperature (F)');
         soiltemp_voltage_data.addColumn('number', 'air temperature (F)');
-        soiltemp_voltage_data.addColumn('number', 'solar power (V)');
+        soiltemp_voltage_data.addColumn('number', 'solar power (volts)');
         $.each(all_data, function (i, row) {
           soiltemp_voltage_data.addRow([
             (new Date(row.timestamp)),
             parseFloat(row.soiltempf),
             parseFloat(row.tempf),
-            parseFloat(row.solarvoltage)
+            parseFloat(row.solarvoltage)/4096.0*3.3*3
             ]);
         });
 
@@ -59,7 +59,7 @@
           },
           vAxes: {
             0: {title: "temp (f)", viewWindow:{max:20, min:100}},
-            1: {title: "solarvoltage", viewWindow:{max:0, min:3000}}
+            1: {title: "voltage", viewWindow:{max:0, min:7}}
           }
         });
 
@@ -74,8 +74,8 @@
         $.each(all_data, function (i, row) {
           rain_soilmoisture.addRow([
             (new Date(row.timestamp)),
-            parseFloat(row.soilmoisture0),
-            parseFloat(row.soilmoisture1),
+            (4096-parseFloat(row.soilmoisture0))/4096,
+            (4096-parseFloat(row.soilmoisture1))/4096,
             parseFloat(row.rainin)
             ]);
         });
@@ -90,7 +90,7 @@
             2: {targetAxisIndex: 1}
           },
           vAxes: {
-            0: {title: "moisture", viewWindow:{max:4096, min:2000}},
+            0: {title: "moisture ratio", viewWindow:{max:1, min:0}},
             1: {title: "inches", viewWindow:{max:2, min:0}}
           }
         });
