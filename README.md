@@ -1,2 +1,1 @@
-# bread-detector
-Bread detector
+# garden-logger
