@@ -11,29 +11,38 @@
     <!-- EXAMPLE SCRIPT -->
     <script>
 
-      function getData(maxPages) {
+      // onload callback
+      function drawCharts() {
+
         all_data = [];
+        var results = [];
         var public_key = 'OG6Wn5ANN5HMXryVqjRm';
-        for(var page =1; page < maxPages; page++ ) {
-          var jsonData = JSON.parse($.ajax({
-            url: 'https://data.sparkfun.com/output/' + public_key + '.json',
+
+        for(var page =1; page < 10; page++ ) {
+          var async = $.ajax({
+            url:'https://data.sparkfun.com/output/' + public_key + '.json',
             data: {page: page},
             dataType: 'json',
-            async: false,
-          }).responseText);
-
-          $.each(jsonData, function (i, row) {
-              all_data.push(row);
+            success: function(data1){
+            }
           });
+          results.push(async);
         }
-        return all_data;
+
+        $.when.apply(this, results).done(function() {
+          for(var i = 0; i < arguments.length; i++) {
+             $.each(arguments[i][0], function (i, row) {
+              all_data.push(row);
+            });
+          }
+
+          drawChart(all_data);
+        });
+
       }
 
 
-      // onload callback
-      function drawCharts() {
-        all_data = getData(10);
-
+      function drawChart(all_data) {
         var soiltemp_voltage_data = new google.visualization.DataTable();
         soiltemp_voltage_data.addColumn('datetime', 'timestamp');
         soiltemp_voltage_data.addColumn('number', 'soil temperature (F)');
