@@ -13,12 +13,13 @@
 
       // onload callback
       function drawCharts() {
+        var pages = Number(location.search.split('pages=')[1]) ? location.search.split('pages=')[1] : 10;
 
         all_data = [];
         var results = [];
         var public_key = 'OG6Wn5ANN5HMXryVqjRm';
 
-        for(var page =1; page < 10; page++ ) {
+        for(var page =1; page < pages; page++ ) {
           var async = $.ajax({
             url:'https://data.sparkfun.com/output/' + public_key + '.json',
             data: {page: page},
