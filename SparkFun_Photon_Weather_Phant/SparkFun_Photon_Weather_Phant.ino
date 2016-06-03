@@ -284,7 +284,7 @@ void loop()
     // still take readings and do work in between printing out data.
     count++;
     //alter this number to change the amount of time between each reading
-    if(count == 50)
+    if(count == 200)
     {
       //Get readings from all sensors
        getWeather();
