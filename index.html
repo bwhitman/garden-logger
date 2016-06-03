@@ -78,8 +78,8 @@
 
         var rain_soilmoisture = new google.visualization.DataTable();
         rain_soilmoisture.addColumn('datetime', 'timestamp');
-        rain_soilmoisture.addColumn('number', 'soil moisture 1');
-        rain_soilmoisture.addColumn('number', 'soil moisture 2');
+        rain_soilmoisture.addColumn('number', 'lower soil moisture');
+        rain_soilmoisture.addColumn('number', 'upper soil moisture');
         rain_soilmoisture.addColumn('number', 'rain (inches)');
         $.each(all_data, function (i, row) {
           rain_soilmoisture.addRow([
