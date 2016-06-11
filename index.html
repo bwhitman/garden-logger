@@ -163,6 +163,27 @@
         });
 
 
+        var water_level = new google.visualization.DataTable();
+        water_level.addColumn('datetime', 'timestamp');
+        water_level.addColumn('number', 'water level');
+        $.each(all_data, function (i, row) {
+          water_level.addRow([
+            (new Date(row.timestamp)),
+            (4096-parseFloat(row.waterlevel))/4096 ]);
+        });
+
+        var water_level_chart = new google.visualization.LineChart($('#water_level_chart').get(0));
+
+        water_level_chart.draw(water_level, {
+          title: 'Water level',
+          series: {
+            0: {targetAxisIndex: 0},
+          },
+          vAxes: {
+            0: {title: "water level", viewWindow:{max:1, min:0}},
+          }
+        });
+
       }
 
       // load chart lib
@@ -181,6 +202,7 @@
     <div id="soilmoisture_chart" style="width: 100%; height: 500px;"></div>
     <div id="winds_chart" style="width: 100%; height: 500px;"></div>
     <div id="humidity_and_hg_chart" style="width: 100%; height: 500px;"></div>
+    <div id="water_level_chart" style="width: 100%; height: 500px;"></div>
 
   </body>
 </html>
