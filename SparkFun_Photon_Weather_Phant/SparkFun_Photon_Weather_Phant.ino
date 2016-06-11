@@ -65,9 +65,11 @@ DallasTemperature sensors(&oneWire);
 
 #define SOIL_MOIST_0 A1
 #define SOIL_MOIST_1 A2
+#define WATER_LEVEL A5
 
 #define SOIL_MOIST_POWER_0 D5
 #define SOIL_MOIST_POWER_1 D6
+#define WATER_LEVEL_POWER D7
 
 #define SOLAR_VOLTAGE A4
 
@@ -127,6 +129,7 @@ float baroTemp = 0;
 int soilMoisture0 = 0;
 int soilMoisture1 = 0;
 int solarVoltage = 0;
+int waterLevel = 0;
 
 int count = 0;//This triggers a post and print on the first time through the loop
 
@@ -188,9 +191,11 @@ void setup()
 
     pinMode(SOIL_MOIST_POWER_0, OUTPUT);//power control for soil moisture
     pinMode(SOIL_MOIST_POWER_1, OUTPUT);//power control for soil moisture
+    pinMode(WATER_LEVEL_POWER, OUTPUT);//power control for soil moisture
 
     digitalWrite(SOIL_MOIST_POWER_0, LOW);//Leave off by defualt
     digitalWrite(SOIL_MOIST_POWER_1, LOW);//Leave off by defualt
+    digitalWrite(WATER_LEVEL_POWER, LOW);//Leave off by defualt
 
 
     Serial.begin(9600);   // open serial over USB
@@ -402,14 +407,17 @@ void getSoilMositure()
     giving the sensor a longer lifespan.*/
     digitalWrite(SOIL_MOIST_POWER_0, HIGH);
     digitalWrite(SOIL_MOIST_POWER_1, HIGH);
+    digitalWrite(WATER_LEVEL_POWER, HIGH);
 
     delay(200);
     soilMoisture0 = analogRead(SOIL_MOIST_0);
     soilMoisture1 = analogRead(SOIL_MOIST_1);
+    waterLevel = analogRead(WATER_LEVEL);
     solarVoltage = analogRead(SOLAR_VOLTAGE);
     delay(100);
     digitalWrite(SOIL_MOIST_POWER_0, LOW);
     digitalWrite(SOIL_MOIST_POWER_1, LOW);
+    digitalWrite(WATER_LEVEL_POWER, LOW);
 
 
 }
@@ -550,6 +558,7 @@ int postToPhant()
     phant.add("soilmoisture0", soilMoisture0);
     phant.add("soilmoisture1", soilMoisture1);
     phant.add("solarvoltage", solarVoltage);
+    phant.add("waterlevel", waterLevel);
     phant.add("tempf", tempf);
     phant.add("winddir", winddir);
     phant.add("windspeedmph", windspeedmph);
